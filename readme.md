@@ -15,7 +15,8 @@
   <a href="#-how-it-works">Architecture</a> •
   <a href="#-customising-your-server">Custom Server</a> •
   <a href="#-roadmap">Road-map</a> •
-  <a href="#-contributing">Contributing</a>
+  <a href="#-contributing">Contributing</a> •
+  <a href="#-troubleshooting">Troubleshooting</a>
 </p>
 
 ---
@@ -159,3 +160,26 @@ Director of Innovation, Odyssey Therapeia
 Built at the Windsurf × Antler Hackathon. April 26th 2025
 May this save you hours of boilerplate and unleash a wave of custom AI tools.
 
+---
+
+## Troubleshooting
+
+### Dependency Conflicts (`vsce` and `@types/vscode`)
+
+During initial setup, encountered the following issues:
+
+1.  **Error:** `Cannot find module 'vscode' or its corresponding type declarations.`
+    *   **Cause:** The `@types/vscode` package, required for VS Code extension development TypeScript definitions, was not correctly installed or recognized.
+2.  **Error:** `npm error notarget No matching version found for vsce@^3.16.0.`
+    *   **Cause:** An attempt to install `@types/vscode` failed because the specified version of `vsce` (`^3.16.0`) in `package.json` was unavailable or did not exist on npm.
+
+**Resolution Steps:**
+
+1.  Identified the `vsce` version conflict in `package.json`.
+2.  Attempted to update `vsce` to the latest version (`npm install --save-dev vsce@latest`).
+3.  Noticed a deprecation warning indicating `vsce` was renamed to `@vscode/vsce`.
+4.  Uninstalled the old `vsce` package (`npm uninstall vsce`).
+5.  Installed the correctly named package (`npm install --save-dev @vscode/vsce`).
+6.  Ran `npm install` again to ensure all dependencies, including `@types/vscode`, were installed correctly based on the updated `package.json` and `package-lock.json`.
+
+This resolved both the `vsce` version conflict and the initial `@types/vscode` error. See commit [33655ad](https://github.com/abrahamabel/windsurf-x-antler/commit/33655ad) for the code changes.
