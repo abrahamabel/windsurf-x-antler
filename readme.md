@@ -77,11 +77,11 @@ uvicorn main:app --reload   # visit http://127.0.0.1:8000/ping
 
 Add the server (stdio cmd or SSE URL) under
 Settings → Cascade → Model Context Protocol → Servers → Refresh.
-
+```
 ⸻
 
 🧩 How It Works
-
+```
 graph TD
     WIDE[Windsurf IDE] -- ⌘⇧P --> PLUGIN[Easy MCP Builder]
     PLUGIN -- Prompts --> USER((Developer))
@@ -91,12 +91,17 @@ graph TD
     subgraph "Run Time"
         MCP -. JSON-RPC .-> CASCADE
     end
+```
 
-	1.	Command Trigger – Extension registers createMcpServer in VS Code API.
-	2.	Minimal Prompts – Two input boxes gather project name & target dir.
-	3.	Scaffolder – Writes main.py with FastAPI boilerplate and FastApiMCP(app).mount().
-	4.	Developer Runs Server – uvicorn spins up an MCP endpoint.
-	5.	Cascade Discovers Tools – Windsurf’s MCP client handshake exposes /ping (and future tools) to the agent.
+**1. Command Trigger:** Extension registers createMcpServer in VS Code API.
+
+**2. Minimal Prompts:** Two input boxes gather project name & target dir.
+
+**3. Scaffolder:** Writes main.py with FastAPI boilerplate and `FastApiMCP(app).mount().`
+
+**4. Developer Runs Server:** uvicorn spins up an MCP endpoint.
+
+**5. Cascade Discovers Tools:** Windsurf’s MCP client handshake exposes `/ping` (and future tools) to the agent.
 
 ⸻
 
