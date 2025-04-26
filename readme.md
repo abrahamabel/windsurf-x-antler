@@ -1,185 +1,121 @@
-<!-- Title -->
-<h1 align="center">
-  Windsurf × Antler Hackathon  
-  <br/>🌊 Easy MCP Builder Plugin
-</h1>
+# Easy MCP Builder
 
-<p align="center">
-  <em>“Spin up a custom FastAPI + MCP server for Windsurf’s agents in <strong>under 60 seconds</strong>.”</em>
-</p>
+A Windsurf plugin that scaffolds a ready-to-run FastAPI + FastAPI-MCP server project with one command.
 
-<p align="center">
-  <a href="#-features">Features</a> •
-  <a href="#-quick-demo">Demo GIF</a> •
-  <a href="#-getting-started">Getting Started</a> •
-  <a href="#-how-it-works">Architecture</a> •
-  <a href="#-customising-your-server">Custom Server</a> •
-  <a href="#-roadmap">Road-map</a> •
-  <a href="#-contributing">Contributing</a> •
-  <a href="#-troubleshooting">Troubleshooting</a>
-</p>
+## Features
 
----
+- Simple one-command scaffolding of FastAPI + FastAPI-MCP server projects
+- Automatically creates a minimal project structure with all necessary files
+- Integrates with Windsurf's command palette
+- Enables Windsurf's Cascade agent to immediately use the new MCP tools
 
-## ⚡ Elevator Pitch
-Windsurf’s coding agents gain super-powers from **MCP servers**, but crafting one from scratch is fiddly.  
-This plugin compresses the entire process into a single command:
+## Installation
 
-> **⌘ ⇧ P → “Create MCP Server” → Project Name**  
-> ✅ A ready-to-run **FastAPI + FastApiMCP** project appears, complete with a health-check endpoint and dependency list.
+Clone this repository or download the release package:
 
-No boilerplate, no context-switching—just immediate extensibility for Cascade’s *Write* & *Chat* agents.
+```bash
+git clone https://github.com/abrahamabel/windsurf-x-antler.git
+```
 
----
+Install dependencies:
 
-## ✨ Features
-|  | Capability | Benefit |
-|---|------------|---------|
-| **One-shot scaffold** | Generates `main.py`, `requirements.txt`, and folder structure | Zero boilerplate |
-| **FastAPI + FastApiMCP** | `FastApiMCP(app).mount()` auto-registers MCP routes | Works with Claude, GPT-4, etc. |
-| **Health check** | Built-in `/ping` endpoint | Verify server alive in <10 s |
-| **Friendly UX** | Two prompts (name & location) + success toast | Stays in developer flow |
-| **Cross-platform** | VS Code API; works on macOS, Windows, Linux | No special setup |
-| **Hackathon-ready** | Built in 3 h; <200 LOC | Easy to grok & extend |
+```bash
+npm install
+```
 
----
+Compile the extension:
 
-## 🎥 Quick Demo
-> _Animated GIF placeholder — a recording here_  (//TODO)
-> <img src="demo.gif" width="700"/>
+```bash
+npm run compile
+```
 
----
+Package the extension:
 
-## 🚀 Getting Started
+```bash
+npm run package
+```
+
+Install the generated VSIX file in Windsurf:
+
+```bash
+windsurf --install-extension easy-mcp-builder-0.0.1.vsix
+```
+
+## Usage
+
+1. Open Windsurf  
+2. Open the command palette (Ctrl+Shift+P or Cmd+Shift+P)  
+3. Type "Easy MCP Builder: Create MCP Server" and select the command  
+4. Enter a project name (or accept the default "mcp_server")  
+5. Select a target directory for the project  
+6. The plugin will generate the project and open the `main.py` file  
+
+## Generated Project Structure
+
+The plugin generates a minimal project with the following files:
+
+- `main.py`: A FastAPI application with FastApiMCP integration and a `/ping` endpoint  
+- `requirements.txt`: Lists the required dependencies (`fastapi`, `fastapi-mcp`, `uvicorn`)  
+- `tsconfig.json`: TypeScript configuration for the extension project  
+- `src/extension.ts`: Extension code with scaffolding logic  
+- `package.json`: Extension metadata and command contributions  
+- `dist/extension.js`: Compiled JavaScript output  
+
+## Running the Generated Server
+
+Navigate to the generated project directory:
+
+```bash
+cd <project_name>
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
+
+The server will be available at http://127.0.0.1:8000  
+The `/ping` endpoint can be accessed at http://127.0.0.1:8000/ping
+
+## Integrating with Windsurf Cascade
+
+1. Start your MCP server as described above  
+2. In Windsurf, open Settings → Cascade → Model Context Protocol → Servers  
+3. Add your MCP server URL (`http://127.0.0.1:8000`) to the MCP servers list  
+4. Refresh the list – Cascade will now be able to use the tools provided by your MCP server
+
+## Development
 
 ### Prerequisites
-* **Windsurf** ≥ 2025.4  
-* **Node 18+** (for the extension host)  
-* **Python 3.10+** & `pip` or **Poetry**  
-* Run inside a Windsurf workspace with write permissions
 
-### Installation
+- Node.js 18+  
+- npm  
+- Python 3.10+ (for testing the generated server)
+
+### Building
+
 ```bash
-# 1. Install the VSIX (local or Marketplace after approval)
-windsurf --install-extension easy-mcp-builder.vsix
-
-# 2. Reload Windsurf
-
-Usage
-
-⇧⌘P (or Ctrl+Shift+P)
-> Create MCP Server
-[enter project name]  e.g.  weather_tool
-[choose directory]    (defaults to current workspace)
-
-cd weather_tool
-pip install -r requirements.txt
-uvicorn main:app --reload   # visit http://127.0.0.1:8000/ping
-
-Add the server (stdio cmd or SSE URL) under
-Settings → Cascade → Model Context Protocol → Servers → Refresh.
-```
-⸻
-
-🧩 How It Works
-```
-graph TD
-    WIDE[Windsurf IDE] -- ⌘⇧P --> PLUGIN[Easy MCP Builder]
-    PLUGIN -- Prompts --> USER((Developer))
-    PLUGIN -- File Scaffold --> FS[Project Folder]
-    FS -- main.py/start --> MCP[FastAPI + FastApiMCP]
-    MCP -- Tools --> CASCADE[Cascade Agent]
-    subgraph "Run Time"
-        MCP -. JSON-RPC .-> CASCADE
-    end
+git clone https://github.com/abrahamabel/windsurf-x-antler.git
+npm install
+npm run compile
 ```
 
-**1. Command Trigger:** Extension registers createMcpServer in VS Code API.
+### Testing
 
-**2. Minimal Prompts:** Two input boxes gather project name & target dir.
+1. Compile the extension: `npm run compile`  
+2. Package it: `npm run package`  
+3. Install the VSIX file in Windsurf  
+4. Run the command in Windsurf to scaffold a demo project
 
-**3. Scaffolder:** Writes main.py with FastAPI boilerplate and `FastApiMCP(app).mount().`
+## Dev Log
 
-**4. Developer Runs Server:** uvicorn spins up an MCP endpoint.
+- Initial commit: Add README.md  
+- chore: Sync README.md with latest edits  
+- feat: Add Architecture.md and update README placeholder  
+- feat: Add TypeScript configuration (tsconfig.json) for extension project scaffolding  
+- feat: Implement core MCP server scaffolding logic (extension.ts, package.json, dist)  
+- feat: add main.py scaffold with FastAPI + FastApiMCP integration  
+- chore: add detailed comments and logs  
+- chore: add requirements.txt with FastAPI, FastAPI-MCP, Uvicorn dependencies and detailed logs/comments  
+- fix: Remove stray inline code from package.json title line (restore valid JSON)
 
-**5. Cascade Discovers Tools:** Windsurf’s MCP client handshake exposes `/ping` (and future tools) to the agent.
+## License
 
-⸻
-
-🛠️ Customising Your Server
-
-Once scaffolded, extend main.py like so:
-
-from fastapi import FastAPI
-from fastapi_mcp import FastApiMCP
-
-app = FastAPI()
-mcp = FastApiMCP(app).mount()
-
-# Example MCP tool
-@app.post("/summarise")
-async def summarise(text: str):
-    "Summarise arbitrary text."
-    return {"summary": text[:100] + "..."}          # ← replace with real logic
-
-Every path you add becomes an MCP-callable function for the LLM.
-Just restart the server and click Refresh in Windsurf to reload tools.
-
-⸻
-
-🛤 Roadmap
-	•	Settings UI – choose Python / TypeScript template
-	•	One-click Start∕Stop MCP server inside Windsurf
-	•	Config auto-injection (append to mcp_config.json)
-	•	Template gallery & marketplace publishing
-	•	Unit tests & CI GitHub Action
-
-⸻
-
-👩‍💻 Contributing
-	1.	Fork → create branch → commit PR.
-	2.	For new templates, follow TEMPLATE_GUIDE.md.
-	3.	All code under MIT; sign CLA in CLA.md.
-
-⸻
-
-📜 License
-
-MIT © 2025 Odyssey Therapeia & Contributors
-“Windsurf” is a trademark of @ 2025 Exafunction, Inc. All rights reserved.
-FastAPI® is a trademark of Sebastián Ramírez.
-Model Context Protocol © Anthropic PBC.
-
-⸻
-
-✍️ Author
-
-Abraham Abel Boodala
-Director of Innovation, Odyssey Therapeia
-
-Built at the Windsurf × Antler Hackathon. April 26th 2025
-May this save you hours of boilerplate and unleash a wave of custom AI tools.
-
----
-
-## Troubleshooting
-
-### Dependency Conflicts (`vsce` and `@types/vscode`)
-
-During initial setup, encountered the following issues:
-
-1.  **Error:** `Cannot find module 'vscode' or its corresponding type declarations.`
-    *   **Cause:** The `@types/vscode` package, required for VS Code extension development TypeScript definitions, was not correctly installed or recognized.
-2.  **Error:** `npm error notarget No matching version found for vsce@^3.16.0.`
-    *   **Cause:** An attempt to install `@types/vscode` failed because the specified version of `vsce` (`^3.16.0`) in `package.json` was unavailable or did not exist on npm.
-
-**Resolution Steps:**
-
-1.  Identified the `vsce` version conflict in `package.json`.
-2.  Attempted to update `vsce` to the latest version (`npm install --save-dev vsce@latest`).
-3.  Noticed a deprecation warning indicating `vsce` was renamed to `@vscode/vsce`.
-4.  Uninstalled the old `vsce` package (`npm uninstall vsce`).
-5.  Installed the correctly named package (`npm install --save-dev @vscode/vsce`).
-6.  Ran `npm install` again to ensure all dependencies, including `@types/vscode`, were installed correctly based on the updated `package.json` and `package-lock.json`.
-
-This resolved both the `vsce` version conflict and the initial `@types/vscode` error. See commit [33655ad](https://github.com/abrahamabel/windsurf-x-antler/commit/33655ad) for the code changes.
+MIT
