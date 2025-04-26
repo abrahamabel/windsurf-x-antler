@@ -116,6 +116,10 @@ npm run compile
 - chore: add requirements.txt with FastAPI, FastAPI-MCP, Uvicorn dependencies and detailed logs/comments  
 - fix: Remove stray inline code from package.json title line (restore valid JSON)
 
+## Examples
+
+See the example images in `examples/images/` for usage screenshots and demos.
+
 ## License
 
 MIT
