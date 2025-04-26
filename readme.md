@@ -44,7 +44,7 @@ No boilerplate, no context-switching—just immediate extensibility for Cascade�
 ---
 
 ## 🎥 Quick Demo
-> _Animated GIF placeholder — drop your recording here_  
+> _Animated GIF placeholder — a recording here_  (//TODO)
 > <img src="demo.gif" width="700"/>
 
 ---
